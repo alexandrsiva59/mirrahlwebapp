@@ -1,0 +1,244 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fashion Store - Telegram Mini App</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <!-- Burger Menu -->
+    <div class="burger-menu" id="burgerMenu">
+        <div class="burger-menu__header">
+            <h2>Fashion Store</h2>
+            <button class="burger-menu__close" id="closeMenu">×</button>
+        </div>
+        <nav class="burger-menu__nav">
+            <button class="menu-item" onclick="showPage('catalogPage'); closeBurgerMenu()">Главная</button>
+            <div class="menu-item-dropdown">
+                <button class="menu-item" onclick="toggleCategoriesDropdown()">Категории <span class="dropdown-arrow">▼</span></button>
+                <div class="categories-dropdown" id="categoriesDropdown">
+                    <button class="category-item" onclick="setCategory('Мужская одежда'); closeBurgerMenu()">Мужская одежда</button>
+                    <button class="category-item" onclick="setCategory('Женская одежда'); closeBurgerMenu()">Женская одежда</button>
+                    <button class="category-item" onclick="setCategory('Аксессуары'); closeBurgerMenu()">Аксессуары</button>
+                    <button class="category-item" onclick="setCategory('Обувь'); closeBurgerMenu()">Обувь</button>
+                </div>
+            </div>
+            <button class="menu-item" onclick="showPage('cartPage'); closeBurgerMenu()">
+                Корзина <span class="menu-badge" id="menuCartBadge">0</span>
+            </button>
+            <button class="menu-item" onclick="showPage('notificationsPage'); closeBurgerMenu()">Уведомления</button>
+            <button class="menu-item" onclick="showPage('reviewsPage'); closeBurgerMenu()">Отзывы</button>
+            <button class="menu-item" onclick="showPage('aboutPage'); closeBurgerMenu()">О магазине</button>
+        </nav>
+    </div>
+    <div class="burger-menu__overlay" id="burgerOverlay"></div>
+
+    <!-- Header -->
+    <header class="header">
+        <div class="header__content">
+            <button class="burger-btn" id="burgerBtn">
+                <span></span>
+                <span></span>
+                <span></span>
+            </button>
+            <h1 class="header__title">Fashion Store</h1>
+            <div class="header__cart" id="cartIcon">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <circle cx="9" cy="21" r="1"></circle>
+                    <circle cx="20" cy="21" r="1"></circle>
+                    <path d="m1 1 4 4 5.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"></path>
+                </svg>
+                <span class="cart-badge" id="cartBadge">0</span>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="main">
+        <!-- Catalog Page -->
+        <div id="catalogPage" class="page active">
+            <!-- Search and Filters -->
+            <div class="search-filter">
+                <div class="search-box">
+                    <input type="text" id="searchInput" placeholder="Поиск товаров..." class="search-input">
+                </div>
+                <div class="filter-buttons">
+                    <button class="filter-btn active" data-category="Все товары">Все</button>
+                    <button class="filter-btn" data-category="Мужская одежда">Мужская</button>
+                    <button class="filter-btn" data-category="Женская одежда">Женская</button>
+                    <button class="filter-btn" data-category="Аксессуары">Аксессуары</button>
+                    <button class="filter-btn" data-category="Обувь">Обувь</button>
+                </div>
+            </div>
+
+            <!-- Products Grid -->
+            <div class="products-grid" id="productsGrid">
+                <!-- Products will be rendered here -->
+            </div>
+        </div>
+
+        <!-- Cart Page -->
+        <div id="cartPage" class="page">
+            <div class="page-header">
+                <h2>Корзина</h2>
+            </div>
+            <div class="cart-content">
+                <div id="cartItems" class="cart-items">
+                    <!-- Cart items will be rendered here -->
+                </div>
+                <div class="cart-empty" id="cartEmpty" style="display: none;">
+                    <div class="empty-state">
+                        <div class="empty-icon">🛒</div>
+                        <h3>Корзина пуста</h3>
+                        <p>Добавьте товары из каталога</p>
+                        <button class="btn btn-primary" onclick="showPage('catalogPage')">К покупкам</button>
+                    </div>
+                </div>
+                <div class="cart-footer" id="cartFooter">
+                    <div class="cart-total">
+                        <span class="total-label">Итого:</span>
+                        <span class="total-price" id="cartTotal">0 ₽</span>
+                    </div>
+                    <button class="btn btn-primary btn-full" onclick="showPage('checkoutPage')">Оформить заказ</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Checkout Page -->
+        <div id="checkoutPage" class="page">
+            <div class="page-header">
+                <h2>Оформление заказа</h2>
+            </div>
+            <div class="checkout-content">
+                <form id="checkoutForm" class="checkout-form">
+                    <div class="form-group">
+                        <label class="form-label">Имя *</label>
+                        <input type="text" name="name" class="form-control" required>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Телефон *</label>
+                        <input type="tel" name="phone" class="form-control" required>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Адрес доставки *</label>
+                        <textarea name="address" class="form-control" rows="3" required></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Комментарий к заказу</label>
+                        <textarea name="comment" class="form-control" rows="2"></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Способ оплаты *</label>
+                        <select name="payment" class="form-control" required id="paymentSelect">
+                            <option value="">Выберите способ оплаты</option>
+                            <option value="card">💳 Банковская карта</option>
+                            <option value="sbp">📱 СБП (Система быстрых платежей)</option>
+                            <option value="telegram-stars">⭐ Telegram Stars</option>
+                            <option value="cash">💵 При получении</option>
+                        </select>
+                    </div>
+                    <div class="payment-info" id="paymentInfo"></div>
+                    <div class="order-summary">
+                        <h3>Сумма заказа</h3>
+                        <div class="order-total">
+                            <span>Итого к оплате:</span>
+                            <span class="order-price" id="orderTotal">0 ₽</span>
+                        </div>
+                    </div>
+                    <button type="submit" class="btn btn-primary btn-full">Подтвердить и оплатить</button>
+                </form>
+            </div>
+        </div>
+
+        <!-- Notifications Page -->
+        <div id="notificationsPage" class="page">
+            <div class="page-header">
+                <h2>Уведомления</h2>
+                <button class="btn btn-secondary" id="subscribeBtn">📢 Подписаться на уведомления</button>
+            </div>
+            <div class="notifications-content" id="notificationsContent">
+                <!-- Notifications will be rendered here -->
+            </div>
+        </div>
+
+        <!-- Reviews Page -->
+        <div id="reviewsPage" class="page">
+            <div class="page-header">
+                <h2>Отзывы</h2>
+            </div>
+            <div class="reviews-content">
+                <!-- Review Form -->
+                <div class="review-form-section">
+                    <h3>Оставить отзыв</h3>
+                    <form id="reviewForm" class="review-form">
+                        <div class="form-group">
+                            <label class="form-label">Имя *</label>
+                            <input type="text" name="name" class="form-control" required>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Email</label>
+                            <input type="email" name="email" class="form-control">
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Рейтинг *</label>
+                            <div class="rating-input" id="ratingInput">
+                                <span class="star" data-rating="1">⭐</span>
+                                <span class="star" data-rating="2">⭐</span>
+                                <span class="star" data-rating="3">⭐</span>
+                                <span class="star" data-rating="4">⭐</span>
+                                <span class="star" data-rating="5">⭐</span>
+                            </div>
+                            <input type="hidden" name="rating" id="ratingValue" required>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Отзыв *</label>
+                            <textarea name="text" class="form-control" rows="4" required></textarea>
+                        </div>
+                        <button type="submit" class="btn btn-primary">Отправить отзыв</button>
+                    </form>
+                </div>
+
+                <!-- Reviews List -->
+                <div class="reviews-list" id="reviewsList">
+                    <h3>Отзывы покупателей</h3>
+                    <div id="reviewsContainer">
+                        <!-- Reviews will be rendered here -->
+                    </div>
+                </div>
+            </div>
+
+
+        <!-- About Page -->
+        <div id="aboutPage" class="page">
+            <div class="page-header">
+                <h2>О магазине</h2>
+            </div>
+            <div class="about-content">
+                <div class="about-card">
+                    <h3>Fashion Store</h3>
+                    <p>Мы предлагаем качественную одежду и аксессуары с доставкой по всей России. Работаем с 2020 года.</p>
+                    <div class="contact-info">
+                        <p><strong>Связь:</strong> shop@example.com</p>
+                        <p><strong>Время работы:</strong> 9:00 - 21:00</p>
+                        <p><strong>Доставка:</strong> По всей России</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Toast Notifications -->
+    <div id="toast" class="toast">
+        <div class="toast-content" id="toastContent"></div>
+    </div>
+
+    <!-- Loading Overlay -->
+    <div id="loadingOverlay" class="loading-overlay">
+        <div class="loading-spinner"></div>
+        <p>Обработка...</p>
+    </div>
+
+    <script src="app.js"></script>
+</body>
+</html>
